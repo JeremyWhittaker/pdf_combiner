@@ -1,0 +1,28 @@
+# PDF Combiner Configuration File
+# Copy this file to config.yaml and customize as needed
+
+# Performance settings
+max_workers: 4                    # Number of parallel workers for processing
+compression_level: 5              # PDF compression level (1-9, higher = more compression)
+
+# Processing options
+add_bookmarks: true               # Add bookmarks/TOC for each document
+ocr_enabled: true                 # Enable OCR for image-only PDFs
+preserve_metadata: true           # Preserve document metadata
+
+# File filtering
+include_patterns:                 # File patterns to include
+  - "*.pdf"
+  - "*.doc"
+  - "*.docx"
+exclude_patterns: []              # File patterns to exclude (e.g., ["*draft*", "temp_*"])
+
+# Sorting options
+sort_order: "name"                # Options: name, date, size, custom
+custom_order_file: null           # Path to file with custom order (one filename per line)
+
+# Security
+password: null                    # Password to protect output PDF (leave null for no password)
+
+# Logging
+log_file: null                    # Path to log file (leave null to log to console only)

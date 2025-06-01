@@ -1,0 +1,11 @@
+add_bookmarks: true
+compression_level: 5
+exclude_patterns: []
+include_patterns:
+- '*.pdf'
+- '*.doc'
+- '*.docx'
+max_workers: 4
+ocr_enabled: true
+preserve_metadata: true
+sort_order: name

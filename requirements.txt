@@ -2,3 +2,6 @@ PyPDF2>=3.0.0
 ocrmypdf>=15.0.0
 python-docx>=0.8.11
 docx2pdf>=0.1.8  # Windows/macOS only
+tqdm>=4.64.0  # Progress bars
+pyyaml>=6.0  # Configuration files
+click>=8.0.0  # Better CLI interface
