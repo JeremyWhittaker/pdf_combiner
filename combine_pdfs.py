@@ -333,70 +333,68 @@ def verify_combined_pdf(pdf_path: Path, source_dir: Path) -> None:
 # -----------------------------------------------------------------------------#
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """CLI argument parser."""
-    parser = argparse.ArgumentParser(
-        description="Combine PDFs, DOCs, and DOCXs in a directory (with optional OCR and checking)."
-    )
-    
-    # Create subparsers for different modes
-    subparsers = parser.add_subparsers(dest='mode', help='Operation mode')
-    
-    # Default mode (when no subcommand is used)
-    parser.add_argument(
-        "source_dir",
-        type=Path,
-        nargs='?',
-        help="Directory containing files to combine (non-recursive).",
-    )
-    parser.add_argument(
-        "-o", "--output",
-        type=Path,
-        default=Path.cwd() / "combined.pdf",
-        help="Path for the merged PDF (default: ./combined.pdf).",
-    )
-    parser.add_argument(
-        "--check",
-        action="store_true",
-        help="Only verify documents exist, are readable, and report requirements.",
-    )
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Enable DEBUG-level logging.",
-    )
-    
-    # Verify mode
-    verify_parser = subparsers.add_parser('verify', help='Verify combined PDF contains all files')
-    verify_parser.add_argument(
-        "pdf_file",
-        type=Path,
-        help="Combined PDF file to verify",
-    )
-    verify_parser.add_argument(
-        "source_dir",
-        type=Path,
-        help="Source directory to compare against",
-    )
-    verify_parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Enable DEBUG-level logging.",
-    )
-    
-    args = parser.parse_args(argv)
-    
-    # Handle the case where verify is used
-    if args.mode == 'verify':
-        return args
-    
-    # For default mode, source_dir is required
-    if not hasattr(args, 'source_dir') or args.source_dir is None:
-        parser.error("source_dir is required")
-    
-    return args
+    # First check if 'verify' is in argv to determine which parser to use
+    if argv and len(argv) > 0 and argv[0] == 'verify':
+        # Use verify-specific parser
+        parser = argparse.ArgumentParser(
+            description="Verify combined PDF contains all files from source directory."
+        )
+        parser.add_argument(
+            "mode",
+            choices=['verify'],
+            help="Operation mode",
+        )
+        parser.add_argument(
+            "pdf_file",
+            type=Path,
+            help="Combined PDF file to verify",
+        )
+        parser.add_argument(
+            "source_dir",
+            type=Path,
+            help="Source directory to compare against",
+        )
+        parser.add_argument(
+            "--verbose",
+            action="store_true",
+            help="Enable DEBUG-level logging.",
+        )
+    else:
+        # Use default merge parser
+        parser = argparse.ArgumentParser(
+            description="Combine PDFs, DOCs, and DOCXs in a directory (with optional OCR and checking)."
+        )
+        parser.add_argument(
+            "source_dir",
+            type=Path,
+            help="Directory containing files to combine (non-recursive).",
+        )
+        parser.add_argument(
+            "-o", "--output",
+            type=Path,
+            default=Path.cwd() / "combined.pdf",
+            help="Path for the merged PDF (default: ./combined.pdf).",
+        )
+        parser.add_argument(
+            "--check",
+            action="store_true",
+            help="Only verify documents exist, are readable, and report requirements.",
+        )
+        parser.add_argument(
+            "--verbose",
+            action="store_true",
+            help="Enable DEBUG-level logging.",
+        )
+        
+    return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:
-    args = parse_args(argv)
+    # Handle verify mode separately
+    if argv and len(argv) > 0 and argv[0] == 'verify':
+        args = parse_args(argv)
+    else:
+        args = parse_args(argv)
 
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
@@ -417,7 +415,7 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     # Handle check mode
-    if args.check:
+    if hasattr(args, 'check') and args.check:
         check_only(args.source_dir)
         return
 
@@ -430,4 +428,4 @@ def main(argv: list[str] | None = None) -> None:
 
 
 if __name__ == "__main__":  # pragma: no cover
-    main()
+    main(sys.argv[1:])
