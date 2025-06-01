@@ -1,0 +1,32 @@
+# PDF Combiner Pro Configuration Example
+# Copy this file to config.yaml and customize as needed
+
+# Output settings
+output:
+  default_name: "combined.pdf"  # Default output filename
+  add_metadata: true           # Add source file list to PDF metadata
+  compression: true            # Enable PDF compression
+  overwrite: false            # Overwrite existing output files
+
+# OCR settings
+ocr:
+  enabled: true               # Enable OCR for image-only PDFs
+  language: "eng"             # OCR language (eng, deu, fra, spa, etc.)
+  dpi: 300                    # Resolution for OCR processing
+  skip_text_pages: true       # Skip OCR on pages that already have text
+  timeout: 300                # OCR timeout in seconds per file
+  extra_args: []              # Additional arguments for ocrmypdf
+
+# Processing settings
+processing:
+  temp_dir: null              # Custom temp directory (null = system default)
+  max_workers: 4              # Maximum parallel workers
+  batch_size: 10              # Files to process per batch
+  fail_fast: false            # Stop on first error
+
+# Logging settings
+logging:
+  level: "INFO"               # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  format: "%(asctime)s [%(levelname)s] %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  file: null                  # Log file path (null = console only)
